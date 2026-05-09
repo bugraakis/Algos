@@ -19,7 +19,7 @@ public class LogSLL {
             System.out.println(num + ")[" + curr.raceName + " | " + curr.trackName + " | " +
                 curr.car1Name + ":" + curr.score1 + " vs " + curr.car2Name + ":" + curr.score2 +
                 " | WINNER: " + curr.winnerName + "]");
-            if (curr.next != null) System.out.println("↓");
+            if (curr.next != null) System.out.println("\u2193");
             curr = curr.next;
             num++;
         }

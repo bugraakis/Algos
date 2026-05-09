@@ -1,5 +1,6 @@
 import java.util.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class Main {
     static CarSLL carList = new CarSLL();
@@ -9,7 +10,7 @@ public class Main {
     static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) throws Exception {
-        System.setOut(new PrintStream(System.out, true, "UTF-8"));
+        System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
         loadCars();
         loadTracks();
 
@@ -23,7 +24,7 @@ public class Main {
         System.out.print("Enter track ID: ");
         Track playerTrack = null;
         while (playerTrack == null) {
-            int id = sc.nextInt();
+            int id = readInt();
             playerTrack = trackList.getById(id);
             if (playerTrack == null) System.out.print("Invalid ID. Try again: ");
         }
@@ -37,7 +38,7 @@ public class Main {
         System.out.print("Enter car ID: ");
         Car playerCar = null;
         while (playerCar == null) {
-            int id = sc.nextInt();
+            int id = readInt();
             playerCar = carList.getById(id);
             if (playerCar == null) System.out.print("Invalid ID. Try again: ");
         }
@@ -87,7 +88,7 @@ public class Main {
             System.out.print("Enter track ID: ");
             finalTrack = null;
             while (finalTrack == null) {
-                int id = sc.nextInt();
+                int id = readInt();
                 finalTrack = trackList.getById(id);
                 if (finalTrack == null) System.out.print("Invalid ID. Try again: ");
             }
@@ -188,6 +189,13 @@ public class Main {
         System.out.println("Race ended -> " + car1.name + ": " + Math.max(score1,0) + " pts, " + iter1 + " iters | "
                          + car2.name + ": " + Math.max(score2,0) + " pts, " + iter2 + " iters");
         return new RaceResult(winner, loser, ws, ls, wi, li);
+    }
+
+    static int readInt() {
+        while (true) {
+            try { return sc.nextInt(); }
+            catch (InputMismatchException e) { sc.nextLine(); System.out.print("Please enter a valid number: "); }
+        }
     }
 
     static int getTrackBonus(Car car, Track track) {
