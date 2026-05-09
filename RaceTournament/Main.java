@@ -16,6 +16,8 @@ public class Main {
 
         System.out.println("=== CARS (sorted by performance ascending) ===");
         carList.print();
+        System.out.println("\n=== TRACKS ===");
+        trackList.print();
 
         System.out.println("\n--- Select a track ---");
         trackList.print();
@@ -57,7 +59,7 @@ public class Main {
                     computerCar.name, compScore, compIter, result1a.winner.name);
         System.out.println("WINNER of Race 1a: " + result1a.winner.name);
 
-        int remainingCount = carList.size();
+        int remainingCount = carList.size;
         Car computer2 = carList.getByIndex(random.nextInt(remainingCount));
         carList.remove(computer2);
         Car computer3 = carList.getByIndex(random.nextInt(remainingCount - 1));
@@ -171,9 +173,10 @@ public class Main {
         } else if (pos2 >= 50 && pos1 < 50) {
             winner = car2; winnerIter = iter2; loserIter = iter1;
         } else if (pos1 >= 50) {
-            // both reached 50 same iteration — car1 wins the tie
+            // both reached unit 50 in the same iteration (iter1==iter2 always) — car1 wins
             winner = car1; winnerIter = iter1; loserIter = iter2;
         } else if (score1 >= score2) {
+            // higher remaining score wins; equal score also gives car1 (iter1==iter2 always)
             winner = car1; winnerIter = iter1; loserIter = iter2;
         } else {
             winner = car2; winnerIter = iter2; loserIter = iter1;

@@ -1,22 +1,23 @@
 public class CarList {
     Car head;
+    int size;
 
     void insert(Car car) {
         if (head == null || car.performance < head.performance) {
-            car.next = head; head = car; return;
+            car.next = head; head = car; size++; return;
         }
         Car current = head;
         while (current.next != null && current.next.performance <= car.performance)
             current = current.next;
-        car.next = current.next; current.next = car;
+        car.next = current.next; current.next = car; size++;
     }
 
     void remove(Car target) {
         if (head == null) return;
-        if (head == target) { head = head.next; return; }
+        if (head == target) { head = head.next; size--; return; }
         Car current = head;
         while (current.next != null && current.next != target) current = current.next;
-        if (current.next != null) current.next = current.next.next;
+        if (current.next != null) { current.next = current.next.next; size--; }
     }
 
     Car getById(int id) {
@@ -29,12 +30,6 @@ public class CarList {
         Car current = head;
         for (int i = 0; i < index && current != null; i++) current = current.next;
         return current;
-    }
-
-    int size() {
-        int count = 0; Car current = head;
-        while (current != null) { count++; current = current.next; }
-        return count;
     }
 
     void print() {

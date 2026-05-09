@@ -13,7 +13,7 @@ public class RaceTrack {
         int teleportCount = 0;
         while (teleportCount < 10) {
             TrackNode node = getNodeAt(random.nextInt(50) + 1);
-            if (node.effect.equals("normal")) {
+            if (node != null && node.effect.equals("normal")) {
                 node.effect = "teleport";
                 int teleportDistance = random.nextInt(5) + 1;
                 node.teleportValue = random.nextBoolean() ? teleportDistance : -teleportDistance;
@@ -21,9 +21,13 @@ public class RaceTrack {
             }
         }
 
-        while (true) {
+        boolean resetPlaced = false;
+        while (!resetPlaced) {
             TrackNode node = getNodeAt(random.nextInt(50) + 1);
-            if (node.effect.equals("normal")) { node.effect = "reset"; break; }
+            if (node != null && node.effect.equals("normal")) {
+                node.effect = "reset";
+                resetPlaced = true;
+            }
         }
     }
 
