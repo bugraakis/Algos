@@ -1,10 +1,9 @@
 public class Track {
-    int id, difficulty, boost;
+    int id, boost;
     String name, type;
     Track next;
 
-    Track(int id, String name, String type, int difficulty, int boost) {
-        this.id = id; this.name = name; this.type = type;
-        this.difficulty = difficulty; this.boost = boost;
+    Track(int id, String name, String type, int boost) {
+        this.id = id; this.name = name; this.type = type; this.boost = boost;
     }
 }

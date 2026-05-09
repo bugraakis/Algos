@@ -16,8 +16,6 @@ public class Main {
 
         System.out.println("=== CARS (sorted by performance ascending) ===");
         carList.print();
-        System.out.println("\n=== TRACKS ===");
-        trackList.print();
 
         System.out.println("\n--- Select a track ---");
         trackList.print();
@@ -165,30 +163,29 @@ public class Main {
             if (pos1 >= 50 || score1 <= 0 || pos2 >= 50 || score2 <= 0) break;
         }
 
-        Car winner, loser;
-        int winnerScore, loserScore, winnerIter, loserIter;
+        Car winner;
+        int winnerIter, loserIter;
 
         if (pos1 >= 50 && pos2 < 50) {
-            winner = car1; loser = car2; winnerScore = score1; loserScore = score2; winnerIter = iter1; loserIter = iter2;
+            winner = car1; winnerIter = iter1; loserIter = iter2;
         } else if (pos2 >= 50 && pos1 < 50) {
-            winner = car2; loser = car1; winnerScore = score2; loserScore = score1; winnerIter = iter2; loserIter = iter1;
+            winner = car2; winnerIter = iter2; loserIter = iter1;
         } else if (pos1 >= 50) {
-            if (iter1 <= iter2) { winner = car1; loser = car2; winnerScore = score1; loserScore = score2; winnerIter = iter1; loserIter = iter2; }
-            else                { winner = car2; loser = car1; winnerScore = score2; loserScore = score1; winnerIter = iter2; loserIter = iter1; }
-        } else if (score1 > score2) {
-            winner = car1; loser = car2; winnerScore = score1; loserScore = score2; winnerIter = iter1; loserIter = iter2;
-        } else if (score2 > score1) {
-            winner = car2; loser = car1; winnerScore = score2; loserScore = score1; winnerIter = iter2; loserIter = iter1;
+            // both reached 50 same iteration — car1 wins the tie
+            winner = car1; winnerIter = iter1; loserIter = iter2;
+        } else if (score1 >= score2) {
+            winner = car1; winnerIter = iter1; loserIter = iter2;
         } else {
-            if (iter1 <= iter2) { winner = car1; loser = car2; winnerScore = score1; loserScore = score2; winnerIter = iter1; loserIter = iter2; }
-            else                { winner = car2; loser = car1; winnerScore = score2; loserScore = score1; winnerIter = iter2; loserIter = iter1; }
+            winner = car2; winnerIter = iter2; loserIter = iter1;
         }
 
-        if (winnerScore < 0) winnerScore = 0;
-        if (loserScore  < 0) loserScore  = 0;
-        System.out.println("Race ended -> " + car1.name + ": " + Math.max(score1, 0) + " pts, " + iter1 + " iters | "
-                         + car2.name + ": " + Math.max(score2, 0) + " pts, " + iter2 + " iters");
-        return new RaceResult(winner, loser, winnerScore, loserScore, winnerIter, loserIter);
+        score1 = Math.max(score1, 0);
+        score2 = Math.max(score2, 0);
+        int winnerScore = (winner == car1) ? score1 : score2;
+        int loserScore  = (winner == car1) ? score2 : score1;
+        System.out.println("Race ended -> " + car1.name + ": " + score1 + " pts, " + iter1 + " iters | "
+                         + car2.name + ": " + score2 + " pts, " + iter2 + " iters");
+        return new RaceResult(winner, winnerScore, loserScore, winnerIter, loserIter);
     }
 
     static int readInt() {
@@ -268,7 +265,7 @@ public class Main {
             if (line.trim().isEmpty()) continue;
             String[] parts = line.split(",");
             trackList.insert(new Track(Integer.parseInt(parts[0].trim()), parts[1].trim(),
-                parts[2].trim(), Integer.parseInt(parts[3].trim()), Integer.parseInt(parts[4].trim())));
+                parts[2].trim(), Integer.parseInt(parts[4].trim())));
         }
         reader.close();
     }
