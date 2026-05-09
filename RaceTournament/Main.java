@@ -3,11 +3,11 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class Main {
-    static CarSLL carList = new CarSLL();
-    static TrackSLL trackList = new TrackSLL();
-    static LogSLL raceLog = new LogSLL();
-    static Random rand = new Random();
-    static Scanner sc = new Scanner(System.in);
+    static CarList carList = new CarList();
+    static TrackList trackList = new TrackList();
+    static RaceLog raceLog = new RaceLog();
+    static Random random = new Random();
+    static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws Exception {
         System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
@@ -45,44 +45,44 @@ public class Main {
         carList.remove(playerCar);
         System.out.println("You selected: " + playerCar.name);
 
-        Car compCar = computerChoose(playerCar, playerTrack);
-        carList.remove(compCar);
-        System.out.println("Computer chose: " + compCar.name);
+        Car computerCar = computerChoose(playerCar, playerTrack);
+        carList.remove(computerCar);
+        System.out.println("Computer chose: " + computerCar.name);
 
-        System.out.println("\n=== RACE 1a: " + playerCar.name + " vs " + compCar.name + " on " + playerTrack.name + " ===");
-        RaceResult r1a = doRace(playerCar, compCar, playerTrack);
-        int p1aScore1 = r1a.winner == playerCar ? r1a.winnerScore : r1a.loserScore;
-        int p1aIter1  = r1a.winner == playerCar ? r1a.winnerIter  : r1a.loserIter;
-        int p1aScore2 = r1a.winner == compCar   ? r1a.winnerScore : r1a.loserScore;
-        int p1aIter2  = r1a.winner == compCar   ? r1a.winnerIter  : r1a.loserIter;
-        raceLog.add("Race 1a", playerTrack.name, playerCar.name, p1aScore1, p1aIter1,
-                    compCar.name, p1aScore2, p1aIter2, r1a.winner.name);
-        System.out.println("WINNER of Race 1a: " + r1a.winner.name);
+        System.out.println("\n=== RACE 1a: " + playerCar.name + " vs " + computerCar.name + " on " + playerTrack.name + " ===");
+        RaceResult result1a = doRace(playerCar, computerCar, playerTrack);
+        int playerScore  = result1a.winner == playerCar   ? result1a.winnerScore : result1a.loserScore;
+        int playerIter   = result1a.winner == playerCar   ? result1a.winnerIter  : result1a.loserIter;
+        int compScore    = result1a.winner == computerCar ? result1a.winnerScore : result1a.loserScore;
+        int compIter     = result1a.winner == computerCar ? result1a.winnerIter  : result1a.loserIter;
+        raceLog.add("Race 1a", playerTrack.name, playerCar.name, playerScore, playerIter,
+                    computerCar.name, compScore, compIter, result1a.winner.name);
+        System.out.println("WINNER of Race 1a: " + result1a.winner.name);
 
-        int remaining = carList.size();
-        Car comp2 = carList.getByIndex(rand.nextInt(remaining));
-        carList.remove(comp2);
-        Car comp3 = carList.getByIndex(rand.nextInt(remaining - 1));
-        carList.remove(comp3);
-        Track track1b = trackList.getRandom(rand);
-        trackList.remove(track1b);
+        int remainingCount = carList.size();
+        Car computer2 = carList.getByIndex(random.nextInt(remainingCount));
+        carList.remove(computer2);
+        Car computer3 = carList.getByIndex(random.nextInt(remainingCount - 1));
+        carList.remove(computer3);
+        Track race1bTrack = trackList.getRandom(random);
+        trackList.remove(race1bTrack);
 
-        System.out.println("\n=== RACE 1b: " + comp2.name + " vs " + comp3.name + " on " + track1b.name + " ===");
+        System.out.println("\n=== RACE 1b: " + computer2.name + " vs " + computer3.name + " on " + race1bTrack.name + " ===");
         System.out.println("Remaining tracks:");
         trackList.print();
-        RaceResult r1b = doRace(comp2, comp3, track1b);
-        int p1bScore1 = r1b.winner == comp2 ? r1b.winnerScore : r1b.loserScore;
-        int p1bIter1  = r1b.winner == comp2 ? r1b.winnerIter  : r1b.loserIter;
-        int p1bScore2 = r1b.winner == comp3 ? r1b.winnerScore : r1b.loserScore;
-        int p1bIter2  = r1b.winner == comp3 ? r1b.winnerIter  : r1b.loserIter;
-        raceLog.add("Race 1b", track1b.name, comp2.name, p1bScore1, p1bIter1,
-                    comp3.name, p1bScore2, p1bIter2, r1b.winner.name);
-        System.out.println("WINNER of Race 1b: " + r1b.winner.name);
+        RaceResult result1b = doRace(computer2, computer3, race1bTrack);
+        int comp2Score = result1b.winner == computer2 ? result1b.winnerScore : result1b.loserScore;
+        int comp2Iter  = result1b.winner == computer2 ? result1b.winnerIter  : result1b.loserIter;
+        int comp3Score = result1b.winner == computer3 ? result1b.winnerScore : result1b.loserScore;
+        int comp3Iter  = result1b.winner == computer3 ? result1b.winnerIter  : result1b.loserIter;
+        raceLog.add("Race 1b", race1bTrack.name, computer2.name, comp2Score, comp2Iter,
+                    computer3.name, comp3Score, comp3Iter, result1b.winner.name);
+        System.out.println("WINNER of Race 1b: " + result1b.winner.name);
 
-        Car finalist1 = r1a.winner;
-        Car finalist2 = r1b.winner;
+        Car winner1a = result1a.winner;
+        Car winner1b = result1b.winner;
         Track finalTrack;
-        if (finalist1 == playerCar) {
+        if (winner1a == playerCar) {
             System.out.println("\nYou won Race 1a! Choose the final track:");
             trackList.print();
             System.out.print("Enter track ID: ");
@@ -93,22 +93,22 @@ public class Main {
                 if (finalTrack == null) System.out.print("Invalid ID. Try again: ");
             }
         } else {
-            finalTrack = trackList.getRandom(rand);
+            finalTrack = trackList.getRandom(random);
             System.out.println("\nComputer selects final track: " + finalTrack.name);
         }
         trackList.remove(finalTrack);
         System.out.println("Remaining tracks:");
         trackList.print();
 
-        System.out.println("\n=== FINAL: " + finalist1.name + " vs " + finalist2.name + " on " + finalTrack.name + " ===");
-        RaceResult finalRes = doRace(finalist1, finalist2, finalTrack);
-        int pfScore1 = finalRes.winner == finalist1 ? finalRes.winnerScore : finalRes.loserScore;
-        int pfIter1  = finalRes.winner == finalist1 ? finalRes.winnerIter  : finalRes.loserIter;
-        int pfScore2 = finalRes.winner == finalist2 ? finalRes.winnerScore : finalRes.loserScore;
-        int pfIter2  = finalRes.winner == finalist2 ? finalRes.winnerIter  : finalRes.loserIter;
-        raceLog.add("Final", finalTrack.name, finalist1.name, pfScore1, pfIter1,
-                    finalist2.name, pfScore2, pfIter2, finalRes.winner.name);
-        System.out.println("TOURNAMENT WINNER: " + finalRes.winner.name);
+        System.out.println("\n=== FINAL: " + winner1a.name + " vs " + winner1b.name + " on " + finalTrack.name + " ===");
+        RaceResult finalResult = doRace(winner1a, winner1b, finalTrack);
+        int winner1aScore = finalResult.winner == winner1a ? finalResult.winnerScore : finalResult.loserScore;
+        int winner1aIter  = finalResult.winner == winner1a ? finalResult.winnerIter  : finalResult.loserIter;
+        int winner1bScore = finalResult.winner == winner1b ? finalResult.winnerScore : finalResult.loserScore;
+        int winner1bIter  = finalResult.winner == winner1b ? finalResult.winnerIter  : finalResult.loserIter;
+        raceLog.add("Final", finalTrack.name, winner1a.name, winner1aScore, winner1aIter,
+                    winner1b.name, winner1bScore, winner1bIter, finalResult.winner.name);
+        System.out.println("TOURNAMENT WINNER: " + finalResult.winner.name);
 
         raceLog.print();
     }
@@ -118,44 +118,44 @@ public class Main {
         int score2 = car2.performance + getTrackBonus(car2, track) + getMatchupBonus(car2.type, car1.type);
         System.out.println("Initial scores -> " + car1.name + ": " + score1 + " | " + car2.name + ": " + score2);
 
-        RaceDLL dll = new RaceDLL(rand);
+        RaceTrack raceTrack = new RaceTrack(random);
         int pos1 = 0, pos2 = 0, iter1 = 0, iter2 = 0;
 
         while (true) {
-            int m1 = rand.nextInt(3) + 1;
-            score1 -= m1 * 5;
-            pos1 += m1;
+            int steps1 = random.nextInt(3) + 1;
+            score1 -= steps1 * 5;
+            pos1 += steps1;
             iter1++;
             System.out.println("Iter " + iter1 + " | " + car1.name + " -> pos " + pos1 + " (score: " + score1 + ")");
             if (pos1 < 50 && score1 > 0) {
-                RaceUnit u = dll.getAt(pos1);
-                if (u != null && u.effect.equals("teleport")) {
-                    int old = pos1;
-                    pos1 += u.teleportValue;
+                TrackNode node = raceTrack.getNodeAt(pos1);
+                if (node != null && node.effect.equals("teleport")) {
+                    int prevPosition = pos1;
+                    pos1 += node.teleportValue;
                     score1 -= 5;
                     if (pos1 < 1) pos1 = 1;
-                    System.out.println("  Teleport! " + car1.name + ": " + old + " -> " + pos1 + " (score: " + score1 + ")");
-                } else if (u != null && u.effect.equals("reset")) {
+                    System.out.println("  Teleport! " + car1.name + ": " + prevPosition + " -> " + pos1 + " (score: " + score1 + ")");
+                } else if (node != null && node.effect.equals("reset")) {
                     pos1 = 0;
                     score1 -= 5;
                     System.out.println("  Reset! " + car1.name + " back to start (score: " + score1 + ")");
                 }
             }
 
-            int m2 = rand.nextInt(3) + 1;
-            score2 -= m2 * 5;
-            pos2 += m2;
+            int steps2 = random.nextInt(3) + 1;
+            score2 -= steps2 * 5;
+            pos2 += steps2;
             iter2++;
             System.out.println("Iter " + iter2 + " | " + car2.name + " -> pos " + pos2 + " (score: " + score2 + ")");
             if (pos2 < 50 && score2 > 0) {
-                RaceUnit u = dll.getAt(pos2);
-                if (u != null && u.effect.equals("teleport")) {
-                    int old = pos2;
-                    pos2 += u.teleportValue;
+                TrackNode node = raceTrack.getNodeAt(pos2);
+                if (node != null && node.effect.equals("teleport")) {
+                    int prevPosition = pos2;
+                    pos2 += node.teleportValue;
                     score2 -= 5;
                     if (pos2 < 1) pos2 = 1;
-                    System.out.println("  Teleport! " + car2.name + ": " + old + " -> " + pos2 + " (score: " + score2 + ")");
-                } else if (u != null && u.effect.equals("reset")) {
+                    System.out.println("  Teleport! " + car2.name + ": " + prevPosition + " -> " + pos2 + " (score: " + score2 + ")");
+                } else if (node != null && node.effect.equals("reset")) {
                     pos2 = 0;
                     score2 -= 5;
                     System.out.println("  Reset! " + car2.name + " back to start (score: " + score2 + ")");
@@ -166,35 +166,35 @@ public class Main {
         }
 
         Car winner, loser;
-        int ws, ls, wi, li;
+        int winnerScore, loserScore, winnerIter, loserIter;
 
         if (pos1 >= 50 && pos2 < 50) {
-            winner = car1; loser = car2; ws = score1; ls = score2; wi = iter1; li = iter2;
+            winner = car1; loser = car2; winnerScore = score1; loserScore = score2; winnerIter = iter1; loserIter = iter2;
         } else if (pos2 >= 50 && pos1 < 50) {
-            winner = car2; loser = car1; ws = score2; ls = score1; wi = iter2; li = iter1;
+            winner = car2; loser = car1; winnerScore = score2; loserScore = score1; winnerIter = iter2; loserIter = iter1;
         } else if (pos1 >= 50) {
-            if (iter1 <= iter2) { winner = car1; loser = car2; ws = score1; ls = score2; wi = iter1; li = iter2; }
-            else                { winner = car2; loser = car1; ws = score2; ls = score1; wi = iter2; li = iter1; }
+            if (iter1 <= iter2) { winner = car1; loser = car2; winnerScore = score1; loserScore = score2; winnerIter = iter1; loserIter = iter2; }
+            else                { winner = car2; loser = car1; winnerScore = score2; loserScore = score1; winnerIter = iter2; loserIter = iter1; }
         } else if (score1 > score2) {
-            winner = car1; loser = car2; ws = score1; ls = score2; wi = iter1; li = iter2;
+            winner = car1; loser = car2; winnerScore = score1; loserScore = score2; winnerIter = iter1; loserIter = iter2;
         } else if (score2 > score1) {
-            winner = car2; loser = car1; ws = score2; ls = score1; wi = iter2; li = iter1;
+            winner = car2; loser = car1; winnerScore = score2; loserScore = score1; winnerIter = iter2; loserIter = iter1;
         } else {
-            if (iter1 <= iter2) { winner = car1; loser = car2; ws = score1; ls = score2; wi = iter1; li = iter2; }
-            else                { winner = car2; loser = car1; ws = score2; ls = score1; wi = iter2; li = iter1; }
+            if (iter1 <= iter2) { winner = car1; loser = car2; winnerScore = score1; loserScore = score2; winnerIter = iter1; loserIter = iter2; }
+            else                { winner = car2; loser = car1; winnerScore = score2; loserScore = score1; winnerIter = iter2; loserIter = iter1; }
         }
 
-        if (ws < 0) ws = 0;
-        if (ls < 0) ls = 0;
-        System.out.println("Race ended -> " + car1.name + ": " + Math.max(score1,0) + " pts, " + iter1 + " iters | "
-                         + car2.name + ": " + Math.max(score2,0) + " pts, " + iter2 + " iters");
-        return new RaceResult(winner, loser, ws, ls, wi, li);
+        if (winnerScore < 0) winnerScore = 0;
+        if (loserScore  < 0) loserScore  = 0;
+        System.out.println("Race ended -> " + car1.name + ": " + Math.max(score1, 0) + " pts, " + iter1 + " iters | "
+                         + car2.name + ": " + Math.max(score2, 0) + " pts, " + iter2 + " iters");
+        return new RaceResult(winner, loser, winnerScore, loserScore, winnerIter, loserIter);
     }
 
     static int readInt() {
         while (true) {
-            try { return sc.nextInt(); }
-            catch (InputMismatchException e) { sc.nextLine(); System.out.print("Please enter a valid number: "); }
+            try { return scanner.nextInt(); }
+            catch (InputMismatchException e) { scanner.nextLine(); System.out.print("Please enter a valid number: "); }
         }
     }
 
@@ -202,74 +202,74 @@ public class Main {
         return car.type.equals(track.type) ? track.boost : 0;
     }
 
-    static int getMatchupBonus(String a, String b) {
-        if (a.equals("Electric") && b.equals("Water"))  return 15;
-        if (a.equals("Water")    && b.equals("Fire"))   return 15;
-        if (a.equals("Fire")     && b.equals("Earth"))  return 15;
-        if (a.equals("Earth")    && b.equals("Electric")) return 15;
-        if (a.equals("Air")      && b.equals("Earth"))  return 10;
-        if (a.equals("Heavy")    && b.equals("Air"))    return 10;
+    static int getMatchupBonus(String carType, String opponentType) {
+        if (carType.equals("Electric") && opponentType.equals("Water"))    return 15;
+        if (carType.equals("Water")    && opponentType.equals("Fire"))     return 15;
+        if (carType.equals("Fire")     && opponentType.equals("Earth"))    return 15;
+        if (carType.equals("Earth")    && opponentType.equals("Electric")) return 15;
+        if (carType.equals("Air")      && opponentType.equals("Earth"))    return 10;
+        if (carType.equals("Heavy")    && opponentType.equals("Air"))      return 10;
         return 0;
     }
 
-    static String counterType(String t) {
-        if (t.equals("Electric")) return "Earth";
-        if (t.equals("Water"))    return "Electric";
-        if (t.equals("Fire"))     return "Water";
-        if (t.equals("Earth"))    return "Fire";
-        if (t.equals("Air"))      return "Heavy";
+    static String counterType(String carType) {
+        if (carType.equals("Electric")) return "Earth";
+        if (carType.equals("Water"))    return "Electric";
+        if (carType.equals("Fire"))     return "Water";
+        if (carType.equals("Earth"))    return "Fire";
+        if (carType.equals("Air"))      return "Heavy";
         return "";
     }
 
     static Car computerChoose(Car playerCar, Track track) {
-        String counter = counterType(playerCar.type);
-        Car best = null, curr;
+        String targetType = counterType(playerCar.type);
+        Car bestCar = null, current;
 
-        if (!counter.isEmpty()) {
-            curr = carList.head;
-            while (curr != null) {
-                if (curr.type.equals(counter) && curr.type.equals(track.type)) { best = curr; break; }
-                curr = curr.next;
+        if (!targetType.isEmpty()) {
+            current = carList.head;
+            while (current != null) {
+                if (current.type.equals(targetType) && current.type.equals(track.type)) { bestCar = current; break; }
+                current = current.next;
             }
-            if (best == null) {
-                curr = carList.head;
-                while (curr != null) { if (curr.type.equals(counter)) { best = curr; break; } curr = curr.next; }
+            if (bestCar == null) {
+                current = carList.head;
+                while (current != null) { if (current.type.equals(targetType)) { bestCar = current; break; } current = current.next; }
             }
         }
 
-        if (best == null) {
-            curr = carList.head;
-            while (curr != null) {
-                if (best == null || (curr.performance + getTrackBonus(curr, track)) > (best.performance + getTrackBonus(best, track)))
-                    best = curr;
-                curr = curr.next;
+        if (bestCar == null) {
+            current = carList.head;
+            while (current != null) {
+                if (bestCar == null || (current.performance + getTrackBonus(current, track)) > (bestCar.performance + getTrackBonus(bestCar, track)))
+                    bestCar = current;
+                current = current.next;
             }
         }
-        return best;
+        return bestCar;
     }
 
     static void loadCars() throws Exception {
-        BufferedReader br = new BufferedReader(new FileReader("cars.txt"));
-        String line = br.readLine();
-        while ((line = br.readLine()) != null) {
+        BufferedReader reader = new BufferedReader(new FileReader("cars.txt"));
+        String line = reader.readLine();
+        while ((line = reader.readLine()) != null) {
             if (line.trim().isEmpty()) continue;
-            String[] p = line.split(",");
-            carList.insert(new Car(Integer.parseInt(p[0].trim()), p[1].trim(),
-                Integer.parseInt(p[2].trim()), Integer.parseInt(p[3].trim()),
-                Integer.parseInt(p[4].trim()), p[5].trim()));
+            String[] parts = line.split(",");
+            carList.insert(new Car(Integer.parseInt(parts[0].trim()), parts[1].trim(),
+                Integer.parseInt(parts[2].trim()), Integer.parseInt(parts[3].trim()),
+                Integer.parseInt(parts[4].trim()), parts[5].trim()));
         }
-        br.close();
+        reader.close();
     }
 
     static void loadTracks() throws Exception {
-        BufferedReader br = new BufferedReader(new FileReader("tracks.txt"));
-        String line = br.readLine();
-        while ((line = br.readLine()) != null) {
+        BufferedReader reader = new BufferedReader(new FileReader("tracks.txt"));
+        String line = reader.readLine();
+        while ((line = reader.readLine()) != null) {
             if (line.trim().isEmpty()) continue;
-            String[] p = line.split(",");
-            trackList.insert(new Track(Integer.parseInt(p[0].trim()), p[1].trim(),
-                p[2].trim(), Integer.parseInt(p[3].trim()), Integer.parseInt(p[4].trim())));
+            String[] parts = line.split(",");
+            trackList.insert(new Track(Integer.parseInt(parts[0].trim()), parts[1].trim(),
+                parts[2].trim(), Integer.parseInt(parts[3].trim()), Integer.parseInt(parts[4].trim())));
         }
-        br.close();
+        reader.close();
     }
 }
