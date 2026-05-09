@@ -2,11 +2,11 @@ public class RaceLog {
     LogEntry head, tail;
 
     void add(String raceName, String trackName,
-             String car1Name, int score1, int iter1,
-             String car2Name, int score2, int iter2,
+             String car1Name, int score1,
+             String car2Name, int score2,
              String winnerName) {
-        LogEntry entry = new LogEntry(raceName, trackName, car1Name, score1, iter1,
-                                      car2Name, score2, iter2, winnerName);
+        LogEntry entry = new LogEntry(raceName, trackName, car1Name, score1,
+                                      car2Name, score2, winnerName);
         if (head == null) head = tail = entry;
         else { tail.next = entry; tail = entry; }
     }

@@ -51,12 +51,10 @@ public class Main {
 
         System.out.println("\n=== RACE 1a: " + playerCar.name + " vs " + computerCar.name + " on " + playerTrack.name + " ===");
         RaceResult result1a = doRace(playerCar, computerCar, playerTrack);
-        int playerScore  = result1a.winner == playerCar   ? result1a.winnerScore : result1a.loserScore;
-        int playerIter   = result1a.winner == playerCar   ? result1a.winnerIter  : result1a.loserIter;
-        int compScore    = result1a.winner == computerCar ? result1a.winnerScore : result1a.loserScore;
-        int compIter     = result1a.winner == computerCar ? result1a.winnerIter  : result1a.loserIter;
-        raceLog.add("Race 1a", playerTrack.name, playerCar.name, playerScore, playerIter,
-                    computerCar.name, compScore, compIter, result1a.winner.name);
+        int playerScore = result1a.winner == playerCar   ? result1a.winnerScore : result1a.loserScore;
+        int compScore   = result1a.winner == computerCar ? result1a.winnerScore : result1a.loserScore;
+        raceLog.add("Race 1a", playerTrack.name, playerCar.name, playerScore,
+                    computerCar.name, compScore, result1a.winner.name);
         System.out.println("WINNER of Race 1a: " + result1a.winner.name);
 
         int remainingCount = carList.size;
@@ -72,11 +70,9 @@ public class Main {
         trackList.print();
         RaceResult result1b = doRace(computer2, computer3, race1bTrack);
         int comp2Score = result1b.winner == computer2 ? result1b.winnerScore : result1b.loserScore;
-        int comp2Iter  = result1b.winner == computer2 ? result1b.winnerIter  : result1b.loserIter;
         int comp3Score = result1b.winner == computer3 ? result1b.winnerScore : result1b.loserScore;
-        int comp3Iter  = result1b.winner == computer3 ? result1b.winnerIter  : result1b.loserIter;
-        raceLog.add("Race 1b", race1bTrack.name, computer2.name, comp2Score, comp2Iter,
-                    computer3.name, comp3Score, comp3Iter, result1b.winner.name);
+        raceLog.add("Race 1b", race1bTrack.name, computer2.name, comp2Score,
+                    computer3.name, comp3Score, result1b.winner.name);
         System.out.println("WINNER of Race 1b: " + result1b.winner.name);
 
         Car winner1a = result1a.winner;
@@ -103,11 +99,9 @@ public class Main {
         System.out.println("\n=== FINAL: " + winner1a.name + " vs " + winner1b.name + " on " + finalTrack.name + " ===");
         RaceResult finalResult = doRace(winner1a, winner1b, finalTrack);
         int winner1aScore = finalResult.winner == winner1a ? finalResult.winnerScore : finalResult.loserScore;
-        int winner1aIter  = finalResult.winner == winner1a ? finalResult.winnerIter  : finalResult.loserIter;
         int winner1bScore = finalResult.winner == winner1b ? finalResult.winnerScore : finalResult.loserScore;
-        int winner1bIter  = finalResult.winner == winner1b ? finalResult.winnerIter  : finalResult.loserIter;
-        raceLog.add("Final", finalTrack.name, winner1a.name, winner1aScore, winner1aIter,
-                    winner1b.name, winner1bScore, winner1bIter, finalResult.winner.name);
+        raceLog.add("Final", finalTrack.name, winner1a.name, winner1aScore,
+                    winner1b.name, winner1bScore, finalResult.winner.name);
         System.out.println("TOURNAMENT WINNER: " + finalResult.winner.name);
 
         raceLog.print();
@@ -166,21 +160,11 @@ public class Main {
         }
 
         Car winner;
-        int winnerIter, loserIter;
-
-        if (pos1 >= 50 && pos2 < 50) {
-            winner = car1; winnerIter = iter1; loserIter = iter2;
-        } else if (pos2 >= 50 && pos1 < 50) {
-            winner = car2; winnerIter = iter2; loserIter = iter1;
-        } else if (pos1 >= 50) {
-            // both reached unit 50 in the same iteration (iter1==iter2 always) — car1 wins
-            winner = car1; winnerIter = iter1; loserIter = iter2;
-        } else if (score1 >= score2) {
-            // higher remaining score wins; equal score also gives car1 (iter1==iter2 always)
-            winner = car1; winnerIter = iter1; loserIter = iter2;
-        } else {
-            winner = car2; winnerIter = iter2; loserIter = iter1;
-        }
+        if (pos1 >= 50 && pos2 < 50)      winner = car1;
+        else if (pos2 >= 50 && pos1 < 50) winner = car2;
+        else if (pos1 >= 50)              winner = car1;
+        else if (score1 >= score2)        winner = car1;
+        else                              winner = car2;
 
         score1 = Math.max(score1, 0);
         score2 = Math.max(score2, 0);
@@ -188,7 +172,7 @@ public class Main {
         int loserScore  = (winner == car1) ? score2 : score1;
         System.out.println("Race ended -> " + car1.name + ": " + score1 + " pts, " + iter1 + " iters | "
                          + car2.name + ": " + score2 + " pts, " + iter2 + " iters");
-        return new RaceResult(winner, winnerScore, loserScore, winnerIter, loserIter);
+        return new RaceResult(winner, winnerScore, loserScore);
     }
 
     static int readInt() {
