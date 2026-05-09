@@ -164,9 +164,6 @@ public class Main {
             if (pos1 >= 50 || score1 <= 0 || pos2 >= 50 || score2 <= 0) break;
         }
 
-        System.out.println("Race ended -> " + car1.name + ": " + score1 + " pts, " + iter1 + " iters | "
-                         + car2.name + ": " + score2 + " pts, " + iter2 + " iters");
-
         Car winner, loser;
         int ws, ls, wi, li;
 
@@ -185,6 +182,11 @@ public class Main {
             if (iter1 <= iter2) { winner = car1; loser = car2; ws = score1; ls = score2; wi = iter1; li = iter2; }
             else                { winner = car2; loser = car1; ws = score2; ls = score1; wi = iter2; li = iter1; }
         }
+
+        if (ws < 0) ws = 0;
+        if (ls < 0) ls = 0;
+        System.out.println("Race ended -> " + car1.name + ": " + Math.max(score1,0) + " pts, " + iter1 + " iters | "
+                         + car2.name + ": " + Math.max(score2,0) + " pts, " + iter2 + " iters");
         return new RaceResult(winner, loser, ws, ls, wi, li);
     }
 
@@ -213,20 +215,25 @@ public class Main {
 
     static Car computerChoose(Car playerCar, Track track) {
         String counter = counterType(playerCar.type);
-        Car best = null;
-        Car curr = carList.head;
-        while (curr != null) {
-            if (curr.type.equals(counter) && curr.type.equals(track.type)) { best = curr; break; }
-            curr = curr.next;
-        }
-        if (best == null) {
+        Car best = null, curr;
+
+        if (!counter.isEmpty()) {
             curr = carList.head;
-            while (curr != null) { if (curr.type.equals(counter)) { best = curr; break; } curr = curr.next; }
+            while (curr != null) {
+                if (curr.type.equals(counter) && curr.type.equals(track.type)) { best = curr; break; }
+                curr = curr.next;
+            }
+            if (best == null) {
+                curr = carList.head;
+                while (curr != null) { if (curr.type.equals(counter)) { best = curr; break; } curr = curr.next; }
+            }
         }
+
         if (best == null) {
             curr = carList.head;
             while (curr != null) {
-                if (best == null || curr.performance > best.performance) best = curr;
+                if (best == null || (curr.performance + getTrackBonus(curr, track)) > (best.performance + getTrackBonus(best, track)))
+                    best = curr;
                 curr = curr.next;
             }
         }
