@@ -1,0 +1,7 @@
+id,name,power,control,speed,type
+101,Thunderbolt,85,70,95,Electric
+102,IronClad,95,85,60,Heavy
+103,BlazeRunner,80,65,100,Fire
+104,AquaDrift,75,80,85,Water
+105,TerraCrusher,90,75,70,Earth
+106,WindPhantom,70,90,95,Air

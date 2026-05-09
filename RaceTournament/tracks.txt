@@ -1,0 +1,7 @@
+id,name,type,difficulty,boost
+201,Neon Circuit,Electric,3,20
+202,Volcano Run,Fire,5,25
+203,Ocean Drift,Water,4,15
+204,Mountain Pass,Earth,6,10
+205,Sky Highway,Air,2,30
+206,Industrial Zone,Heavy,5,20
